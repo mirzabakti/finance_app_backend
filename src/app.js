@@ -6,6 +6,9 @@ const connectDB = require('./config/db'); // Fungsi untuk koneksi ke database
 // Konfigurasi dotenv agar membaca variabel lingkungan dari .env
 dotenv.config();
 
+// Panggil fungsi koneksi ke database
+connectDB();
+
 // Inisialisasi Express
 const app = express();
 
