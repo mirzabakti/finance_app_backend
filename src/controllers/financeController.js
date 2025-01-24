@@ -76,7 +76,7 @@ const deleteFinance = async (req, res) => {
     }
 
     // Hapus data finance
-    await finance.remove();
+    await finance.deleteOne();
     res.status(200).json({ message: 'Data berhasil dihapus' });
   } catch (error) {
     res.status(500).json({ message: 'Gagal menghapus data finance' });

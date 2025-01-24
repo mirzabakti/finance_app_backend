@@ -2,7 +2,7 @@
 const mongoose = require('mongoose');
 
 // Definisi skema untuk Finance
-const financeSchema = mongoose.Schema(
+const financeSchema = new mongoose.Schema(
   {
     user: {
       type: mongoose.Schema.Types.ObjectId, // Relasi ke model User
