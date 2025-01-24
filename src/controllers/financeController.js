@@ -83,4 +83,34 @@ const deleteFinance = async (req, res) => {
   }
 };
 
-module.exports = { getFinances, createFinance, updateFinance, deleteFinance };
+// Fungsi untuk mendapatkan laporan keuangan
+const getFinanceSummary = async (req, res) => {
+  try {
+      // Ambil user ID dari JWT
+      const userId = req.user._id;
+
+      // Ambil semua data keuangan user
+      const finances = await Finance.find({ user: userId });
+
+      // Hitung total pemasukan, pengeluaran, dan saldo
+      const totalIncome = finances
+          .filter((item) => item.type === 'income')
+          .reduce((acc, curr) => acc + curr.amount, 0);
+
+      const totalExpense = finances
+          .filter((item) => item.type === 'expense')
+          .reduce((acc, curr) => acc + curr.amount, 0);
+
+      const balance = totalIncome - totalExpense;
+
+      res.status(200).json({
+          totalIncome,
+          totalExpense,
+          balance,
+      });
+  } catch (error) {
+      res.status(500).json({ message: error.message });
+  }
+};
+
+module.exports = { getFinances, createFinance, updateFinance, deleteFinance, getFinanceSummary };
