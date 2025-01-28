@@ -168,4 +168,28 @@ const filterFinance = async (req, res) => {
   }
 };
 
-module.exports = { getFinances, createFinance, updateFinance, deleteFinance, getFinanceSummary, filterFinance };
+// Fungsi untuk mendapatkan statistik berdasarkan kategori
+const getCategoryStats = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    // Ambil semua data keuangan user
+    const finances = await Finance.find({ user: userId });
+
+    // Kelompokkan data berdasarkan kategori
+    const categoryStats = finances.reduce((acc, curr) => {
+      if (!acc[curr.category]) {
+        acc[curr.category] = { total: 0, count: 0 };
+      }
+      acc[curr.category].total += curr.amount;
+      acc[curr.category].count += 1;
+      return acc;
+    }, {});
+
+    res.status(200).json(categoryStats);
+  } catch (error) {
+    res.status(500).json({ message: 'Gagal mendapatkan statistik kategori' });
+  }
+};
+
+module.exports = { getFinances, createFinance, updateFinance, deleteFinance, getFinanceSummary, filterFinance, getCategoryStats };
