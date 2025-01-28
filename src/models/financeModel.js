@@ -22,6 +22,11 @@ const financeSchema = new mongoose.Schema(
       required: [true, 'Tipe diperlukan'], // Validasi: wajib diisi
       enum: ['income', 'expense'], // Hanya boleh 'income' atau 'expense'
     },
+    category: {
+      type: String,
+      required: [true, 'Kategori diperlukan'],
+      enum: ['food', 'transportation', 'entertainment', 'utilities', 'others'], // Daftar kategori
+    },
   },
   {
     timestamps: true, // Tambahkan kolom createdAt dan updatedAt
