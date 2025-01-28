@@ -14,11 +14,19 @@ const getFinances = async (req, res) => {
 
 // Controller untuk membuat data finance baru
 const createFinance = async (req, res) => {
-  const { title, amount, type } = req.body;
+  const { title, amount, type, category } = req.body;
 
   // Validasi input
-  if (!title || !amount || !type) {
+  if (!title || !amount || !type || !category) {
     return res.status(400).json({ message: 'Semua field harus diisi' });
+  }
+
+  if (!['income', 'expense'].includes(type)) {
+    return res.status(400).json({ message: 'Tipe harus income atau expense' });
+  }
+
+  if (!['food', 'transportation', 'entertainment', 'utilities', 'others'].includes(category)) {
+    return res.status(400).json({ message: 'Kategori tidak valid' });
   }
 
   try {
@@ -28,6 +36,7 @@ const createFinance = async (req, res) => {
       title,
       amount,
       type,
+      category,
     });
 
     res.status(201).json(finance);
