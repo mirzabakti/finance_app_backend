@@ -9,7 +9,8 @@ const {
   deleteFinance,
   getFinanceSummary,
   filterFinance,
-  getCategoryStats
+  getCategoryStats,
+  getMonthlyStats
 } = require('../controllers/financeController');
 
 // Route untuk mendapatkan semua data finance
@@ -32,5 +33,8 @@ router.get('/filter', protect, filterFinance);
 
 // Route untuk mendapatkan statistik kategori
 router.get('/category-stats', protect, getCategoryStats);
+
+// Route untuk mendapatkan statistik bulanan
+router.get('/monthly-stats', protect, getMonthlyStats);
 
 module.exports = router;
