@@ -25,7 +25,7 @@ const createFinance = async (req, res) => {
     return res.status(400).json({ message: 'Tipe harus income atau expense' });
   }
 
-  if (!['food', 'transportation', 'entertainment', 'utilities', 'others'].includes(category)) {
+  if (!['food', 'salary', 'education', 'health','transportation', 'entertainment', 'utilities', 'others'].includes(category)) {
     return res.status(400).json({ message: 'Kategori tidak valid' });
   }
 
