@@ -8,6 +8,7 @@ const {
   updateFinance,
   deleteFinance,
   getFinanceSummary,
+  getFinanceReportByPeriod,
   filterFinance,
   getCategoryStats,
   getMonthlyStats
@@ -27,6 +28,9 @@ router.delete('/:id', protect, deleteFinance);
 
 // Route untuk mendapatkan summary finance
 router.get('/summary', protect, getFinanceSummary);
+
+// Route untuk mendapatkan laporan keuangan dalam periode tertentu
+router.get('/report', protect, getFinanceReportByPeriod)
 
 // Route untuk filter data finance
 router.get('/filter', protect, filterFinance);
