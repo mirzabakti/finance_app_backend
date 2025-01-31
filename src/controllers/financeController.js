@@ -126,8 +126,18 @@ const getFinanceSummary = async (req, res) => {
 
 const filterFinance = async (req, res) => {
   try {
-    const userId = req.user._id; // Ambil ID user dari JWT
-    const { type, month, year } = req.query; // Ambil query parameters
+    const userId = req.user._id; // Ambil ID user dari JWT    
+    const {
+      type,        // income atau expense
+      month,       // bulan (1-12)
+      year,        // tahun (contoh: 2025)
+      keyword,     // pencarian kata kunci di title atau category
+      category,    // filter kategori
+      minAmount,   // jumlah minimum
+      maxAmount,    // jumlah maksimum
+      startDate,    // dimulai
+      endDate       // sampai dengan
+    } = req.query; // Ambil query parameters
 
     // Query dasar: hanya data milik user saat ini
     let query = { user: userId };
@@ -159,7 +169,34 @@ const filterFinance = async (req, res) => {
       query.createdAt.$lt = monthEnd;
     }
 
-    // Ambil data berdasarkan query yang telah dibuat
+    // Filter berdasarkan jumlah uang (minAmount dan maxAmount)
+    if (minAmount || maxAmount) {
+      query.amount = {};
+      if (minAmount) query.amount.$gte = Number(minAmount);
+      if (maxAmount) query.amount.$lte = Number(maxAmount);
+    }
+
+    // Pencarian berdasarkan kata kunci di title atau category
+    if (keyword) {
+      query.$or = [
+        { title: { $regex: keyword, $options: 'i' } }, // Case-insensitive regex untuk title
+        { category: { $regex: keyword, $options: 'i' } }, // Case-insensitive regex untuk kategori
+      ];
+    }
+
+    // Filter berdasarkan kategori
+    if (category) {
+      query.category = category;
+    }
+
+    // Filter berdasarkan rentang tanggal
+    if (startDate || endDate) {
+      query.createdAt = {};
+      if (startDate) query.createdAt.$gte = new Date(startDate);
+      if (endDate) query.createdAt.$lte = new Date(endDate);
+    }
+
+    // Ambil data berdasarkan query yang telah dibuat / eksekusi query
     const finances = await Finance.find(query).sort({ createdAt: -1 });
 
     res.status(200).json(finances); // Kirim data yang telah difilter
